@@ -1,25 +1,25 @@
 package scorekeep;
-import java.util.*;
-import java.lang.Exception;
+
+import java.util.List;
 
 public class SessionFactory {
-  private final SessionModel model = new SessionModel();
+    private final SessionModel model = new SessionModel();
 
-  public SessionFactory(){
-  }
+    public SessionFactory() {
+    }
 
-  public Session newSession() {
-    String id = Identifiers.random();
-    Session session = new Session(id);
-    model.saveSession(session);
-    return session;
-  }
+    public Session newSession() {
+        String id = Identifiers.random();
+        Session session = new Session(id);
+        model.saveSession(session);
+        return session;
+    }
 
-  public Session getSession(String sessionId) throws SessionNotFoundException {
-    return model.loadSession(sessionId);
-  }
+    public Session getSession(String sessionId) throws SessionNotFoundException {
+        return model.loadSession(sessionId);
+    }
 
-  public List<Session> getSessions() {
-    return model.loadSessions();
-  }
+    public List<Session> getSessions() {
+        return model.loadSessions();
+    }
 }

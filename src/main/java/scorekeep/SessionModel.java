@@ -11,39 +11,41 @@ import java.util.List;
 
 public class SessionModel {
 
-  /** AWS SDK credentials. */
-  private AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
-        .build();
-  private DynamoDBMapperConfig mapperConfig = new DynamoDBMapperConfig(new TableNameOverride(System.getenv("SESSION_TABLE")));
-  private DynamoDBMapper mapper = new DynamoDBMapper(client, mapperConfig);
+    /**
+     * AWS SDK credentials.
+     */
+    private AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard()
+            .build();
+    private DynamoDBMapperConfig mapperConfig = new DynamoDBMapperConfig(new TableNameOverride(System.getenv("SESSION_TABLE")));
+    private DynamoDBMapper mapper = new DynamoDBMapper(client, mapperConfig);
 
-  public void saveSession(Session session) {
-    try {
-      mapper.save(session);
-    } catch (Exception e) {
-      throw e;
+    public void saveSession(Session session) {
+        try {
+            mapper.save(session);
+        } catch (Exception e) {
+            throw e;
+        }
     }
-  }
 
-  public Session loadSession(String sessionId) throws SessionNotFoundException {
-    Session session = mapper.load(Session.class, sessionId);
-    if ( session == null ) {
-      throw new SessionNotFoundException(sessionId);
+    public Session loadSession(String sessionId) throws SessionNotFoundException {
+        Session session = mapper.load(Session.class, sessionId);
+        if (session == null) {
+            throw new SessionNotFoundException(sessionId);
+        }
+        return session;
     }
-    return session;
-  }
 
-  public List<Session> loadSessions(){
-    DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
-    List<Session> scanResult = mapper.scan(Session.class, scanExpression);
-    return scanResult;
-  }
-
-  public void deleteSession(String sessionId) throws SessionNotFoundException {
-    Session session = mapper.load(Session.class, sessionId);
-    if ( session == null ) {
-      throw new SessionNotFoundException(sessionId);
+    public List<Session> loadSessions() {
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+        List<Session> scanResult = mapper.scan(Session.class, scanExpression);
+        return scanResult;
     }
-    mapper.delete(session);
-  }
+
+    public void deleteSession(String sessionId) throws SessionNotFoundException {
+        Session session = mapper.load(Session.class, sessionId);
+        if (session == null) {
+            throw new SessionNotFoundException(sessionId);
+        }
+        mapper.delete(session);
+    }
 }

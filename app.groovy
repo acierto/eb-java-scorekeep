@@ -1,1 +1,2 @@
-@Controller class JsApp { }
+@Controller
+class JsApp {}
